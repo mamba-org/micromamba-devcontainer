@@ -1,0 +1,54 @@
+name: Build and publish Docker image
+
+on:
+  # Run it manually for now
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}  # user/reponame
+
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    # Set permissions for GitHub token
+    # <https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#authenticating-to-package-registries-on-github>
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846  # v3.0.0
+
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25  # v1.6.0
+
+    - name: Prepare metadata
+      id: meta
+      uses: docker/metadata-action@e5622373a38e60fb6d795a4421e56882f2d7a681  # v3.6.2
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=sha,enable=true,prefix=git-
+          type=raw,value=latest
+
+    - name: Log into registry ${{ env.REGISTRY }}
+      uses: docker/login-action@dd4fa0671be5250ee6f50aedf4cb05514abda2c7  # v1.14.1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      id: docker_build
+      uses: docker/build-push-action@7f9d37fa544684fb73bfe4835ed7214c255ce02b  # v2.9.0
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        cache-to: type=inline
