@@ -22,12 +22,6 @@ exec 2>&1
 
 echo "Initialize the dev container..."
 
-# Make sure the mounted cache volumes are accessible to all users.
-for dir in /mnt/cache/*/
-do
-    sudo chmod a+rwx "${dir}"
-done
-
 # Set the user and group
 # <https://github.com/mamba-org/micromamba-docker#changing-the-user-id-or-name>
 if [[ ! -z "${NEW_MAMBA_USER}" ]] && [[ "${MAMBA_USER}" != "${NEW_MAMBA_USER}" ]]; then
