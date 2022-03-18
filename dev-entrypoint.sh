@@ -20,13 +20,13 @@ exec 1> >(sudo tee -i /var/log/dev-entrypoint.log)
 exec 2>&1
 
 
-
 echo "Initialize the dev container..."
 
-# Make sure the mounted volume is fully accessible to all users.
-if [[ -d /mnt/.vscode-server ]]; then
-  sudo chmod a+rwx /mnt/.vscode-server
-fi
+# Make sure the mounted cache volumes are accessible to all users.
+for dir in /mnt/cache/*/
+do
+    sudo chmod a+rwx "${dir}"
+done
 
 # Set the user and group
 # <https://github.com/mamba-org/micromamba-docker#changing-the-user-id-or-name>
@@ -41,22 +41,16 @@ if [[ ! -z "${NEW_MAMBA_USER}" ]] && [[ "${MAMBA_USER}" != "${NEW_MAMBA_USER}" ]
     export MAMBA_USER="${NEW_MAMBA_USER}"
 fi
 
-# Set up the Docker if mounted.
+# Configure Docker permissions.
 if [[ -S /var/run/docker.sock ]] ; then
   # Get the GID of the "docker" group.
   docker_gid=`stat --format=%g /var/run/docker.sock`
   if [ -z "$docker_gid" ] ; then
     echo "No mounted Docker socket found."
   else
-    # Create docker group if it doesn't already exist.
-    [ $(getent group docker) ] || sudo groupadd docker
-
-    # Try to create a new group with this GID. This will fail if the
-    # GID is already assigned.
+    # Change GID of the "docker" group to match the mounted Docker socket.
+    echo "Changing the GID of the 'docker' group to ${docker_gid}."
     sudo groupmod -g $docker_gid docker
-
-    # Add user to the "docker" group.
-    sudo usermod -a -G docker "${MAMBA_USER}"
   fi
 fi
 
@@ -70,21 +64,6 @@ if [[ ! -z "${GIT_EMAIL}" ]]; then
     sudo --user="${MAMBA_USER}" -- git config --global user.email "${GIT_EMAIL}"
 else
     echo 'GIT_EMAIL is undefined.'
-fi
-if [[ -x "${MAMBA_ROOT_PREFIX}"/bin/pre-commit ]]; then
-    # pre-commit is installed, so configure it to always run.
-    # <https://pre-commit.com/#automatically-enabling-pre-commit-on-repositories>
-
-    # Get home of user from username <https://stackoverflow.com/a/53564881>
-    mamba_home="$(getent passwd "$MAMBA_USER" | cut -d: -f6)"
-
-    template_dir="${mamba_home}/.git-template"
-    sudo --user="${MAMBA_USER}" -- git config --global \
-        init.templateDir "${template_dir}"
-    sudo --user="${MAMBA_USER}" -- "${MAMBA_ROOT_PREFIX}"/bin/pre-commit \
-        init-templatedir "${template_dir}"
-else
-    echo "pre-commit not found, skipping pre-commit init"
 fi
 
 # Restore the original stdout and stderr.

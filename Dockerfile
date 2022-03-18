@@ -44,6 +44,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
     # pagination
     less \
     #
+    # monitor output of repeated command
+    watch \
+    #
     # version control
     git \
     patch \
@@ -103,9 +106,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
     && rm -rf /var/lib/apt/lists/*
 
 
-# Grant sudo to the user.
-RUN usermod -aG sudo "${MAMBA_USER}" \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/grant-to-sudo-group
+RUN : \
+    # Grant sudo to the user.
+    && usermod -aG sudo "${MAMBA_USER}" \
+    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/grant-to-sudo-group \
+    # Create docker group if it doesn't already exist
+    && (getent group docker || groupadd docker) \
+    # Add the user to the docker group
+    && usermod -aG docker "${MAMBA_USER}" \
+    ;
 
 # Install docker-compose
 RUN : \
@@ -135,24 +144,36 @@ RUN : \
 ENV DEV_WORK_DIR="${DEV_WORK_DIR}"
 WORKDIR "${DEV_WORK_DIR}"
 
-USER $MAMBA_USER
-
 # Sane defaults for Git
 RUN : \
     # Switch default editor from vim to nano
-    && git config --global core.editor nano \
+    && git config --system core.editor nano \
     # Prevent unintentional merges
     # <https://blog.sffc.xyz/post/185195398930/why-you-should-use-git-pull-ff-only-git-is-a>
-    && git config --global pull.ff only \
+    && git config --system pull.ff only \
     # Use default branch name "main" instead of "master"
-    && git config --global init.defaultBranch main \
+    && git config --system init.defaultBranch main \
     # Initialize Git LFS
-    && git lfs install --skip-repo \
+    && git lfs install --system --skip-repo \
     ;
+# Install Git pre-commit hook
+COPY pre-commit-hook.sh /usr/share/git-core/templates/hooks/pre-commit
+# Override any existing templateDir defined in ~/.gitconfig
+#   <https://git-scm.com/docs/git-init#_template_directory>
+ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
+
+USER $MAMBA_USER
 
 # Symlink the .vscode-server directory to the user's home directory.
-RUN ln -s "/mnt/.vscode-server" "/home/${MAMBA_USER}/.vscode-server"
+RUN : \
+    && ln -s "/mnt/cache/vscode-server" "/home/${MAMBA_USER}/.vscode-server" \
+    && mkdir -p "/home/${MAMBA_USER}/.cache" \
+    && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
+    ;
 
 # Stack a development entrypoint after the default micromamba-docker entrypoint.
 COPY dev-entrypoint.sh /usr/local/bin/_dev-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/usr/local/bin/_dev-entrypoint.sh"]
+
+# Prevent the container from shutting down
+CMD echo "Sleeping forever." && sleep infinity
