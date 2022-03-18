@@ -164,7 +164,7 @@ ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 
 USER $MAMBA_USER
 
-# Symlink the .vscode-server directory to the user's home directory.
+# Symlink the cache directories to the corresponding locations in home directory.
 RUN : \
     && ln -s "/mnt/cache/vscode-server" "/home/${MAMBA_USER}/.vscode-server" \
     && mkdir -p "/home/${MAMBA_USER}/.cache" \

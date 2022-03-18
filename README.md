@@ -4,7 +4,12 @@ A micromamba-based VS Code development container.
 
 ## Introduction
 
-Coming soon...
+This repository hosts the base image for a VS Code development container which comes with:
+
+* Basic command-line utilities
+* Git, with some helpful defaults, e.g. [pre-commit](https://pre-commit.com)-ready
+* Docker ("from Docker", i.e. connecting to a mounted `/var/run/docker.sock`), Docker Compose, BuildKit
+* Micromamba
 
 ## Usage
 
