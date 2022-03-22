@@ -12,6 +12,9 @@ ARG DEV_WORK_DIR=/work
 
 FROM ${BASE_IMAGE}
 
+# Grab gosu for switching users.
+COPY --from=tianon/gosu /usr/local/bin/gosu /usr/local/bin/gosu
+
 # Grab Docker, buildx, and Docker Compose
 COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-buildx
@@ -28,6 +31,8 @@ RUN : \
 
 # Install some useful OS packages
 RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
+    # certs for https
+    ca-certificates \
     #
     # manpages
     man-db \
