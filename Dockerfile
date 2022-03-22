@@ -115,10 +115,6 @@ RUN : \
     # Grant sudo to the user.
     && usermod -aG sudo "${MAMBA_USER}" \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/grant-to-sudo-group \
-    # Create docker group if it doesn't already exist
-    && (getent group docker || groupadd docker) \
-    # Add the user to the docker group
-    && usermod -aG docker "${MAMBA_USER}" \
     ;
 
 # Install docker-compose

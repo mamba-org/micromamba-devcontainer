@@ -35,8 +35,15 @@ if [[ -S /var/run/docker.sock ]] ; then
         sudo usermod -aG "${docker_gid}" "${MAMBA_USER}"
     else
         # The group for the Docker socket's gid doesn't exist.
-        echo "Changing the GID of the 'docker' group to ${docker_gid}."
-        sudo groupmod -g $docker_gid docker
+        if getent group docker ; then
+          # The "docker" group exists, but doesn't match the gid of the Docker socket.
+          docker_group_name="docker-conflicting-groupname"
+        else
+          docker_group_name="docker"
+        fi
+        echo "Setting the GID of the '${docker_group_name}' group to ${docker_gid}."
+        sudo groupadd --force --gid "${docker_gid}" "${docker_group_name}"
+        sudo usermod -aG "${docker_group_name}" "${MAMBA_USER}"
     fi
   fi
 fi
