@@ -42,9 +42,15 @@ if [[ -S /var/run/docker.sock ]] ; then
   if [ -z "$docker_gid" ] ; then
     echo "No mounted Docker socket found."
   else
-    # Change GID of the "docker" group to match the mounted Docker socket.
-    echo "Changing the GID of the 'docker' group to ${docker_gid}."
-    sudo groupmod -g $docker_gid docker
+    if getent group "${docker_gid}" ; then
+        # The group for the Docker socket's gid already exists.
+        echo "Adding user to '$(getent group "${docker_gid}" | cut -d: -f1)' group for docker access."
+        sudo usermod -aG "${docker_gid}" "${MAMBA_USER}"
+    else
+        # The group for the Docker socket's gid doesn't exist.
+        echo "Changing the GID of the 'docker' group to ${docker_gid}."
+        sudo groupmod -g $docker_gid docker
+    fi
   fi
 fi
 
