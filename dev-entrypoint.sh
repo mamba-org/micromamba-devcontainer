@@ -65,8 +65,8 @@ exec 2>&${stderr_alias} 1>&${stdout_alias}
 
 # Pass execution to the CMD.
 if [ ${#@} -gt 0 ]; then
-    exec "${@}"
+    sudo --user "${MAMBA_USER}" "${@}"
 else
     # The arguments list is empty, so default to Bash.
-    exec "/bin/bash"
+    sudo --user "${MAMBA_USER}" "/bin/bash"
 fi
