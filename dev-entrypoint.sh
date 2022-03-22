@@ -7,19 +7,6 @@
 
 set -x
 
-# For some reason, VS Code doesn't display this output when starting the dev container.
-# Log it to a file so that we can check it if needed.
-# Redirect stdout ( > ) into a named pipe ( >() ) running "tee"
-# <https://stackoverflow.com/a/3403786>
-
-# Assign original stdout and stderr to file descriptors so that we can restore them later.
-exec {stdout_alias}>&1 {stderr_alias}>&2
-
-# Redirect stdout and stderr to a file.
-exec 1> >(sudo tee -i /var/log/dev-entrypoint.log)
-exec 2>&1
-
-
 echo "Initialize the dev container..."
 
 # Set the user and group
@@ -65,9 +52,6 @@ if [[ ! -z "${GIT_EMAIL}" ]]; then
 else
     echo 'GIT_EMAIL is undefined.'
 fi
-
-# Restore the original stdout and stderr.
-exec 2>&${stderr_alias} 1>&${stdout_alias}
 
 # Pass execution to the CMD.
 if [ ${#@} -gt 0 ]; then
