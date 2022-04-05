@@ -60,6 +60,11 @@ else
     echo 'GIT_EMAIL is undefined.'
 fi
 
+# Run pre-commit install if applicable.
+if [ -f .pre-commit-config.yaml ]; then
+    pre-commit install
+fi
+
 # Pass execution to the CMD.
 if [ ${#@} -gt 0 ]; then
     sudo --user "${MAMBA_USER}" "${@}"
