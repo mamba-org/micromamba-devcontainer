@@ -2,7 +2,6 @@
 
 set -ef -o pipefail
 
-echo xyz
 echo "$@"
 
 # Activate the environment if $MAMBA_DOCKERFILE_ACTIVATE=1
