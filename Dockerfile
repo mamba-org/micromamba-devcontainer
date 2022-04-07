@@ -8,7 +8,7 @@
 ARG BASE_IMAGE=mambaorg/micromamba:git-17cae43
 
 # The folder to use as a workspace. The project should be mounted here.
-ARG DEV_WORK_DIR=/work
+ARG DEV_WORK_DIR=/workspaces
 
 FROM ${BASE_IMAGE}
 
