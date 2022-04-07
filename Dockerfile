@@ -169,7 +169,8 @@ USER $MAMBA_USER
 
 # Symlink the cache directories to the corresponding locations in home directory.
 RUN : \
-    && ln -s "/mnt/cache/vscode-server" "/home/${MAMBA_USER}/.vscode-server" \
+    && mkdir -p "/home/${MAMBA_USER}/.vscode-server" \
+    && ln -s "/mnt/cache/vscode-server-extensions" "/home/${MAMBA_USER}/.vscode-server/extensions" \
     && mkdir -p "/home/${MAMBA_USER}/.cache" \
     && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
     ;
