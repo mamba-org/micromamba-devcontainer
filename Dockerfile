@@ -179,8 +179,6 @@ RUN : \
 COPY dockerfile_shell.sh /usr/local/bin/_dockerfile_shell.sh
 
 # Stack a development entrypoint after the default micromamba-docker entrypoint.
-COPY dev-entrypoint.sh /usr/local/bin/_dev-entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/usr/local/bin/_dev-entrypoint.sh"]
+COPY configure_docker_group.sh /usr/local/bin/_configure_docker_group.sh
 
-# Prevent the container from shutting down
-CMD echo "Sleeping forever." && sleep infinity
+CMD /usr/local/bin/_configure_docker_group.sh && echo "Sleeping forever." && while sleep 1000; do :; done
