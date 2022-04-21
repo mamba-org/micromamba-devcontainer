@@ -13,7 +13,7 @@ This repository hosts the base image for a VS Code development container which c
 
 ## Usage
 
-See this [example](https://github.com/maresb/micromamba-devcontainer-example).
+See this [example](https://github.com/maresb/micromamba-devcontainer-example) and this [cookiecutter template](https://gitlab.com/bmares/cookiecutter-micromamba-devcontainer).
 
 ## Configuration
 
