@@ -5,7 +5,7 @@
 # For more info, about micromamba, see:
 # <https://github.com/mamba-org/micromamba-docker>.
 
-ARG BASE_IMAGE=mambaorg/micromamba:git-17cae43
+ARG BASE_IMAGE=mambaorg/micromamba:git-4db2399-jammy
 
 # The folder to use as a workspace. The project should be mounted here.
 ARG DEV_WORK_DIR=/workspaces
@@ -22,15 +22,16 @@ COPY --from=docker/compose /usr/local/bin/docker-compose /usr/local/bin/docker-c
 
 USER root
 
-# Reallow installing manpages <https://unix.stackexchange.com/a/480460>
-# (The Docker image is minified so manpages aren't included.)
-RUN : \
-    && sed -i '/path-exclude \/usr\/share\/man/d' /etc/dpkg/dpkg.cfg.d/docker \
-    && sed -i '/path-exclude \/usr\/share\/groff/d' /etc/dpkg/dpkg.cfg.d/docker \
-    ;
+# Reallow installing manpages. (See Ubuntu's "unminimize" script.)
+# (The Ubuntu image is minified so manpages aren't included.)
+RUN rm \
+        /etc/dpkg/dpkg.cfg.d/excludes \
+        /etc/update-motd.d/60-unminimize \
+        /usr/bin/man \
+    && dpkg-divert --quiet --remove --rename /usr/bin/man
 
 # Install some useful OS packages
-RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \
     # certs for https
     ca-certificates \
     #
@@ -109,7 +110,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
     telnet \
     #
     # used by VS Code LiveShare extension
-    libicu67 \
+    libicu70 \
     #
     && rm -rf /var/lib/apt/lists/*
 
