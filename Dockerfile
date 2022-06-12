@@ -62,6 +62,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends --reinstall \
     # simple text editor
     nano \
     #
+    # less-simple text editor
+    vim \
+    #
     # parses JSON on the bash command line
     jq \
     #
