@@ -49,10 +49,10 @@ This repository hosts the base image for a VS Code development container which c
 * Micromamba via [`mambaorg/micromamba`](https://github.com/mamba-org/micromamba-docker).
 * Ubuntu 22.04 (jammy).
 * Sudo rights for the default user.
-* Docker, Docker Compose and BuildKit installed for [use from within the container](#running-"docker-from-docker").
+* Docker, Docker Compose and BuildKit installed for [use from within the container](#running-docker-from-docker).
 * Basic command-line utilities from Ubuntu (e.g. `nano`, `git`, `less`, `man`, `htop`, `zip`, `jq`, `ping`).
 * Configuration of Git, with some [helpful defaults](#git-pre-configured-for-ease-of-use)
-* Can be used remotely over [SSH](#ssh-agent).
+* Can be used [remotely over SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh).
 
 ## Configuration
 
