@@ -72,7 +72,7 @@ The following have been set as system defaults within the container (`git config
 
 * The default editor is `nano`.
 * Pulling is configured with [fast-forward only](https://blog.sffc.xyz/post/185195398930), to avoid unexpected merge-conflict situations.
-* The blame-ignore file is pre-configured to `.git-blame-ignore-revs`.
+* The blame-ignore file is automatically configured to `.git-blame-ignore-revs` when it exists.
 * The default branch name is `main`.
 
 In addition,

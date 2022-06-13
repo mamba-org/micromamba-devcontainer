@@ -39,6 +39,12 @@ if [ -f .pre-commit-config.yaml ]; then
     pre-commit install
 fi
 
+# Set default blame ignore filename.
+# This should only be done when it exists, due to <https://stackoverflow.com/q/70435937>
+if [ -f .git-blame-ignore-revs ]; then
+    git config --system blame.ignoreRevsFile .git-blame-ignore-revs
+fi
+
 # Pass execution to the CMD.
 if [ ${#@} -gt 0 ]; then
     sudo --user "${MAMBA_USER}" "${@}"

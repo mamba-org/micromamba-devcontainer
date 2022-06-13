@@ -156,8 +156,6 @@ RUN : \
     # Prevent unintentional merges
     # <https://blog.sffc.xyz/post/185195398930/why-you-should-use-git-pull-ff-only-git-is-a>
     && git config --system pull.ff only \
-    # Set default blame ignore filename
-    && git config --system blame.ignoreRevsFile .git-blame-ignore-revs \
     # Use default branch name "main" instead of "master"
     && git config --system init.defaultBranch main \
     # Initialize Git LFS
