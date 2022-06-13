@@ -21,14 +21,17 @@ jobs:
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846  # v3.0.0
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # v3.0.2
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@8b122486cedac8393e77aa9734c3528886e4a1a8  # v2.0.0
 
     - name: Setup Docker buildx
-      uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25  # v1.6.0
+      uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6  # v2.0.0
 
     - name: Prepare metadata
       id: meta
-      uses: docker/metadata-action@e5622373a38e60fb6d795a4421e56882f2d7a681  # v3.6.2
+      uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a  # v4.0.1
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
@@ -36,7 +39,7 @@ jobs:
           type=raw,value=latest
 
     - name: Log into registry ${{ env.REGISTRY }}
-      uses: docker/login-action@dd4fa0671be5250ee6f50aedf4cb05514abda2c7  # v1.14.1
+      uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b  # v2.0.0
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
@@ -44,7 +47,7 @@ jobs:
 
     - name: Build and push Docker image
       id: docker_build
-      uses: docker/build-push-action@7f9d37fa544684fb73bfe4835ed7214c255ce02b  # v2.9.0
+      uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8  # v3.0.0
       with:
         context: .
         platforms: linux/amd64,linux/arm64
