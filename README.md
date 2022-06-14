@@ -32,7 +32,7 @@ You will then be prompted to reopen it in a container:
 
 Upon reopening, VS Code will build the development Dockerfile if necessary, launch a container, install the VS Code backend inside, and configure everything according to the specification defined in `.devcontainer/devcontainer.json`.
 
-The project folder will then open, mounted inside the Docker container:
+The project folder will then open, mounted inside the container, and all installed extensions (e.g. Docker) will be available:
 
 ![loaded devcontainer](readme-images/loaded-devcontainer.png)
 
