@@ -177,9 +177,6 @@ RUN : \
     && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
     ;
 
-# Make sure all files we create going forward are writeable by the user.
-COPY dockerfile_shell.sh /usr/local/bin/_dockerfile_shell.sh
-
 # Stack a development entrypoint after the default micromamba-docker entrypoint.
 COPY configure_docker_group.sh /usr/local/bin/_configure_docker_group.sh
 
