@@ -177,7 +177,6 @@ RUN : \
     && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
     ;
 
-# Stack a development entrypoint after the default micromamba-docker entrypoint.
-COPY configure_docker_group.sh /usr/local/bin/_configure_docker_group.sh
-
-CMD /usr/local/bin/_configure_docker_group.sh && echo "Sleeping forever." && while sleep 1000; do :; done
+# Set CMD script to run on container startup.
+COPY _dev-cmd.sh /usr/local/bin/_dev-cmd.sh
+CMD _dev-cmd.sh

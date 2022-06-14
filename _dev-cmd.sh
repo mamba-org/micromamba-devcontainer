@@ -32,3 +32,5 @@ if [[ -S /var/run/docker.sock ]] ; then
     fi
   fi
 fi
+
+while sleep 1000; do :; done
