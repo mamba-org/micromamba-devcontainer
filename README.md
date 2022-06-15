@@ -2,21 +2,21 @@
 
 A general-purpose Micromamba-enabled VS Code development container image.
 
-Save the time and effort of configuring development tools for each project and each collaborator.
+Save the time and effort of configuring development tools for each project × collaborator × device.
 
 Featuring:
 
-* Reproducible and isolated development environments "as code".
-* Runs [remotely](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) (e.g. from the cloud) just as well as locally.
-* Several common tools (including Docker) are pre-installed with convenient defaults to minimize necessary configuration.
+* Reproducible and isolated development environments "as code". 📄
+* Runs [remotely](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) (e.g. from the cloud) just as well as locally. ☁️
+* Several common tools (including Docker) are pre-installed with convenient defaults to minimize necessary configuration. 🐳
 
 ## Links
 
 * [This micromamba-devcontainer on GitHub](https://github.com/maresb/micromamba-devcontainer)
-* [Example development container for a Python project with Poetry](https://github.com/maresb/micromamba-devcontainer-example)
+* [Example development container](https://github.com/maresb/micromamba-devcontainer-example) for a Python project with Poetry
 * [Micromamba Docker container](https://github.com/mamba-org/micromamba-docker) (parent image)
-* [Developing inside a Container](https://code.visualstudio.com/docs/remote/containers) documentation
-* [devcontainer.json reference](https://code.visualstudio.com/docs/remote/devcontainerjson-reference) documentation
+* VS Code [Developing inside a Container](https://code.visualstudio.com/docs/remote/containers) documentation
+* VS Code [devcontainer.json reference](https://code.visualstudio.com/docs/remote/devcontainerjson-reference) documentation
 
 ## Getting started / Usage
 
@@ -32,7 +32,7 @@ You will then be prompted to reopen it in a container:
 
 Upon reopening, VS Code will build the development Dockerfile if necessary, launch a container, install the VS Code backend inside, and configure everything according to the specification defined in `.devcontainer/devcontainer.json`.
 
-The project folder will then open, mounted inside the container, and all installed extensions (e.g. Docker) will be available:
+The project folder will then open, mounted inside the container, and all installed extensions (e.g. Docker, Git History, and Jupyter) will be available:
 
 ![loaded devcontainer](readme-images/loaded-devcontainer.png)
 
@@ -113,6 +113,8 @@ One solution is to log into the host machine and run
 ```bash
 sudo chmod -R a+rwX /tmp/vsch
 ```
+
+(This could reduce security and is recommended only when all the users are trusted.)
 
 #### Permission denied while trying to connect to the Docker daemon socket
 
