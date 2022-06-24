@@ -15,10 +15,9 @@ FROM ${BASE_IMAGE}
 # Grab gosu for switching users.
 COPY --from=tianon/gosu /usr/local/bin/gosu /usr/local/bin/gosu
 
-# Grab Docker, buildx, and Docker Compose
+# Grab Docker and buildx
 COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-buildx
-COPY --from=docker/compose /usr/local/bin/docker-compose /usr/local/bin/docker-compose
 
 USER root
 
