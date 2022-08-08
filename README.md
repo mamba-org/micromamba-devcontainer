@@ -12,7 +12,7 @@ Featuring:
 
 ## Links
 
-* [This micromamba-devcontainer on GitHub](https://github.com/maresb/micromamba-devcontainer)
+* [This micromamba-devcontainer on GitHub](https://github.com/mamba-org/micromamba-devcontainer)
 * [Example development container](https://github.com/maresb/micromamba-devcontainer-example) for a Python project with Poetry
 * [Micromamba Docker container](https://github.com/mamba-org/micromamba-docker) (parent image)
 * VS Code [Developing inside a Container](https://code.visualstudio.com/docs/remote/containers) documentation
@@ -129,4 +129,4 @@ It seems to happen occasionally that the user does not get added as a member of 
 
 ### Unknown issues
 
-If you encounter some other problem, please file [an issue](https://github.com/maresb/micromamba-devcontainer-example/issues) with this GitHub repository.
+If you encounter some other problem, please file [an issue](https://github.com/mamba-org/micromamba-devcontainer/issues) with this GitHub repository.
