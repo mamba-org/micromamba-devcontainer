@@ -38,7 +38,7 @@ The project folder will then open, mounted inside the container, and all install
 
 ### Details
 
-The Dockerfile hosted in this repository is intended to be used as [the base image for the `dev.Dockerfile`](https://github.com/maresb/micromamba-devcontainer-example/blob/5b5965608a768cbff5854de476529ce9eaa071df/.devcontainer/dev.Dockerfile#L1) which is specified in [`devcontainer.json`](https://github.com/maresb/micromamba-devcontainer-example/blob/5b5965608a768cbff5854de476529ce9eaa071df/.devcontainer/devcontainer.json#L15).
+The Dockerfile hosted in this repository is intended to be used as [the base image for the `dev.Dockerfile`](https://github.com/maresb/micromamba-devcontainer-example/blob/main/.devcontainer/dev.Dockerfile#L1) which is specified in [`devcontainer.json`](https://github.com/maresb/micromamba-devcontainer-example/blob/main/.devcontainer/devcontainer.json#L15).
 
 To adapt this to your own project, your `dev.Dockerfile` should install development dependencies and initialize your project for development (for example by running `pip install --editable .` for Python a project).
 
