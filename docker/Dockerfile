@@ -166,13 +166,17 @@ COPY pre-commit-hook.sh /usr/share/git-core/templates/hooks/pre-commit
 #   <https://git-scm.com/docs/git-init#_template_directory>
 ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 
+# Create a user-accessible cache directory.
+# For persistence, mount a volume or multiple volumes.
+RUN mkdir -p "/mnt/cache" && chown "$MAMBA_USER:$MAMBA_USER" "/mnt/cache"
+
 USER $MAMBA_USER
 
 # Symlink the cache directories to the corresponding locations in home directory.
 RUN : \
-    && mkdir -p "/home/${MAMBA_USER}/.vscode-server" \
+    && mkdir -p "/home/${MAMBA_USER}/.vscode-server" "/home/${MAMBA_USER}/.cache" \
+        "/mnt/cache/vscode-server-extensions" "/mnt/cache/pre-commit" \
     && ln -s "/mnt/cache/vscode-server-extensions" "/home/${MAMBA_USER}/.vscode-server/extensions" \
-    && mkdir -p "/home/${MAMBA_USER}/.cache" \
     && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
     ;
 
