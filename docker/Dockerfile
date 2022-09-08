@@ -109,7 +109,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     telnet \
     #
     # used by VS Code LiveShare extension
-    libicu70 \
+    libicu[0-9][0-9] \
     #
     && rm -rf /var/lib/apt/lists/*
 
