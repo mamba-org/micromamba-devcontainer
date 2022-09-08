@@ -182,4 +182,5 @@ RUN : \
 
 # Set CMD script to run on container startup.
 COPY _dev-cmd.sh /usr/local/bin/_dev-cmd.sh
+COPY _configure-docker-group.sh /usr/local/bin/_configure-docker-group.sh
 CMD _dev-cmd.sh
