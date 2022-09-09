@@ -110,6 +110,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     #
     # used by VS Code LiveShare extension
     libicu[0-9][0-9] \
+    # # <https://docs.microsoft.com/en-us/visualstudio/liveshare/reference/linux#debian--ubuntu>
+    # libssl1.1  # Not found, only libssl3
+    # libkrb5-3 zlib1g gnome-keyring libsecret-1-0 desktop-file-utils x11-utils \
     #
     && rm -rf /var/lib/apt/lists/*
 
@@ -123,6 +126,10 @@ RUN : \
   && sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2*_$(dpkg --print-architecture).deb \
   && rm libssl1.1_1.1.1f-1ubuntu2*_$(dpkg --print-architecture).deb \
 ;
+
+# This installs Live Share dependencies, but doubles the size of the image.
+# Most of the dependencies it installs look unnecessary.
+# RUN curl -L  https://aka.ms/vsls-linux-prereq-script | sudo bash
 
 RUN : \
     # Grant sudo to the user.
