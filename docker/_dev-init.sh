@@ -12,7 +12,3 @@ source _configure-docker-group.sh
 if [ -f .git-blame-ignore-revs ]; then
     git config --system blame.ignoreRevsFile .git-blame-ignore-revs
 fi
-
-echo "Sleeping forever."
-
-while sleep 1000; do :; done

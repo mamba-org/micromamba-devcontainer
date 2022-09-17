@@ -194,6 +194,10 @@ RUN /tmp/symlink-cache-directories.sh && rm /tmp/symlink-cache-directories.sh;
 USER $MAMBA_USER
 
 # Set CMD script to run on container startup.
-COPY _dev-cmd.sh /usr/local/bin/_dev-cmd.sh
+COPY _dev-init.sh /usr/local/bin/_dev-init.sh
 COPY _configure-docker-group.sh /usr/local/bin/_configure-docker-group.sh
-CMD _dev-cmd.sh
+CMD [ \
+    "bash", \
+    "-c", \
+    "_dev-init.sh; echo 'Sleeping forever.'; while sleep 1000; do :; done" \
+]
