@@ -40,6 +40,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     # reinstall coreutils to get manpages for the standard commands (e.g. cp)
     coreutils \
     #
+    # more helpful utils like sponge
+    moreutils \
     # runs commands as superuser
     sudo \
     #
