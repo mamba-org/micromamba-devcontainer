@@ -12,3 +12,15 @@ source _configure-docker-group.sh
 if [ -f .git-blame-ignore-revs ]; then
     git config --system blame.ignoreRevsFile .git-blame-ignore-revs
 fi
+
+# Make sure pre-commit is installed if .pre-commit-config exists
+# (This is to take care of repositories which have already been cloned.
+# Repositories cloned from within this devcontainer will acquire the
+# pre-commit hook from /usr/share/git-core/templates/hooks/pre-commit.)
+if [ -f .pre-commit-config.yaml ]; then
+    if command -v pre-commit > /dev/null; then
+        pre-commit install
+    else
+        echo '`pre-commit` is missing. Please install it in this dev container.' 1>&2
+    fi
+fi
