@@ -185,7 +185,7 @@ ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 
 # Create a user-accessible cache directory.
 # For persistence, mount a volume or multiple volumes.
-RUN mkdir -p "/mnt/cache" && chown "$MAMBA_USER:$MAMBA_USER" "/mnt/cache"
+RUN mkdir --parents --mode=777 "/mnt/cache"
 
 USER $MAMBA_USER
 
