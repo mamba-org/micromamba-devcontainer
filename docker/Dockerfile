@@ -158,7 +158,7 @@ RUN : \
 # Make sure we own the working directory.
 ARG DEV_WORK_DIR
 RUN : \
-    && mkdir -p "${DEV_WORK_DIR}" \
+    && mkdir --parents "${DEV_WORK_DIR}" \
     && chown "$MAMBA_USER:$MAMBA_USER" "${DEV_WORK_DIR}"
 
 # Set the working directory.
@@ -187,15 +187,11 @@ ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 # For persistence, mount a volume or multiple volumes.
 RUN mkdir --parents --mode=777 "/mnt/cache"
 
-USER $MAMBA_USER
-
 # Symlink the cache directories to the corresponding locations in home directory.
-RUN : \
-    && mkdir -p "/home/${MAMBA_USER}/.vscode-server" "/home/${MAMBA_USER}/.cache" \
-        "/mnt/cache/vscode-server-extensions" "/mnt/cache/pre-commit" \
-    && ln -s "/mnt/cache/vscode-server-extensions" "/home/${MAMBA_USER}/.vscode-server/extensions" \
-    && ln -s "/mnt/cache/pre-commit" "/home/${MAMBA_USER}/.cache/pre-commit" \
-    ;
+COPY symlink-cache-directories.sh /tmp
+RUN /tmp/symlink-cache-directories.sh && rm /tmp/symlink-cache-directories.sh;
+
+USER $MAMBA_USER
 
 # Set CMD script to run on container startup.
 COPY _dev-cmd.sh /usr/local/bin/_dev-cmd.sh
