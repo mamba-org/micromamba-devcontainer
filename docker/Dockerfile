@@ -155,10 +155,10 @@ RUN : \
     && sh -c "curl -L https://raw.githubusercontent.com/git/git/v2.35.1/contrib/completion/git-completion.bash > /etc/bash_completion.d/git" \
     ;
 
-# Make sure we own the working directory.
+# Make sure everyone can access the working directory.
 ARG DEV_WORK_DIR
 RUN : \
-    && mkdir --parents "${DEV_WORK_DIR}" \
+    && mkdir --parents --mode=777 "${DEV_WORK_DIR}" \
     && chown "$MAMBA_USER:$MAMBA_USER" "${DEV_WORK_DIR}"
 
 # Set the working directory.
