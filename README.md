@@ -14,7 +14,7 @@ Featuring:
 
 * [This micromamba-devcontainer on GitHub](https://github.com/mamba-org/micromamba-devcontainer)
 * [Docker images on GitHub Container Registry](https://github.com/mamba-org/micromamba-devcontainer/pkgs/container/micromamba-devcontainer)
-* [Example development container](https://github.com/maresb/micromamba-devcontainer-example) for a Python project with Poetry
+* [Example development container](https://github.com/maresb/micromamba-devcontainer-example) for a Python project
 * [Micromamba Docker container](https://github.com/mamba-org/micromamba-docker) (parent image)
 * VS Code [Developing inside a Container](https://code.visualstudio.com/docs/remote/containers) documentation
 * VS Code [devcontainer.json reference](https://code.visualstudio.com/docs/remote/devcontainerjson-reference) documentation
