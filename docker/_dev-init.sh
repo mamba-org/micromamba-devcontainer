@@ -7,6 +7,9 @@ set -x
 
 source _configure-docker-group.sh
 
+# Fix ownership of /mnt/cache
+sudo chown "$(id -u):$(id -g)" /mnt/cache /mnt/cache/*
+
 # Set default blame ignore filename.
 # This should only be done when it exists, due to <https://stackoverflow.com/q/70435937>
 if [ -f .git-blame-ignore-revs ]; then
