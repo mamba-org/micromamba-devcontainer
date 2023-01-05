@@ -185,13 +185,13 @@ COPY pre-commit-hook.sh /usr/share/git-core/templates/hooks/pre-commit
 #   <https://git-scm.com/docs/git-init#_template_directory>
 ENV GIT_TEMPLATE_DIR=/usr/share/git-core/templates
 
-# Create a user-accessible cache directory.
-# For persistence, mount a volume or multiple volumes.
-RUN mkdir --parents --mode=777 "/mnt/cache"
-
-# Symlink the cache directories to the corresponding locations in home directory.
-COPY symlink-cache-directories.sh /tmp
-RUN /tmp/symlink-cache-directories.sh && rm /tmp/symlink-cache-directories.sh;
+# Avoid extension reinstalls
+# <https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls>
+RUN mkdir -p /home/$MAMBA_USER/.vscode-server/extensions \
+        /home/$MAMBA_USER/.vscode-server-insiders/extensions \
+    && chown -R $MAMBA_USER \
+        /home/$MAMBA_USER/.vscode-server \
+        /home/$MAMBA_USER/.vscode-server-insiders
 
 USER $MAMBA_USER
 
