@@ -7,8 +7,15 @@ set -x
 
 source _configure-docker-group.sh
 
-# Fix ownership of /mnt/cache
-sudo chown "$(id -u):$(id -g)" /mnt/cache /mnt/cache/*
+# Fix ownership of cache directories
+sudo chown "$(id -u):$(id -g)" \
+    ~/.cache \
+    ~/.cache/pre-commit \
+    ~/.vscode-server \
+    ~/.vscode-server/extensions \
+    ~/.vscode-server-insiders \
+    ~/.vscode-server-insiders/extensions \
+;
 
 # Set default blame ignore filename.
 # This should only be done when it exists, due to <https://stackoverflow.com/q/70435937>
