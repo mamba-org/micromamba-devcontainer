@@ -1,0 +1,22 @@
+name: Update the cookiecutter template
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  updaterepos:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.RUN_ACTIONS_MARESB_PA_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'maresb',
+              repo: 'cookiecutter-micromamba-devcontainer',
+              workflow_id: 'update-base-image.yml',
+              ref: 'main'
+            })
