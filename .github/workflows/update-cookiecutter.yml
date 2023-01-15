@@ -2,9 +2,7 @@ name: Update the cookiecutter template
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  registry_package:
 
 jobs:
   updaterepos:
