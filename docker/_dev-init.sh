@@ -11,10 +11,6 @@ source _configure-docker-group.sh
 sudo chown "$(id -u):$(id -g)" \
     ~/.cache \
     ~/.cache/pre-commit \
-    ~/.vscode-server \
-    ~/.vscode-server/extensions \
-    ~/.vscode-server-insiders \
-    ~/.vscode-server-insiders/extensions \
 ;
 
 # Set default blame ignore filename.
