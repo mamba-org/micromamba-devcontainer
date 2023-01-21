@@ -193,12 +193,24 @@ RUN mkdir -p /home/$MAMBA_USER/.vscode-server/extensions \
         /home/$MAMBA_USER/.vscode-server-insiders/extensions \
     && chown -R $MAMBA_USER:$MAMBA_USER \
         /home/$MAMBA_USER/.vscode-server \
-        /home/$MAMBA_USER/.vscode-server-insiders
+        /home/$MAMBA_USER/.vscode-server-insiders \
+    # Additionally, make sure these directories are writable by everyone
+    && chmod a+rwx \
+        /home/$MAMBA_USER/.vscode-server \
+        /home/$MAMBA_USER/.vscode-server/extensions \
+        /home/$MAMBA_USER/.vscode-server-insiders \
+        /home/$MAMBA_USER/.vscode-server-insiders/extensions \
+;
 
 # Create pre-commit cache directory
 RUN mkdir -p /home/$MAMBA_USER/.cache/pre-commit \
     && chown -R $MAMBA_USER:$MAMBA_USER \
-        /home/$MAMBA_USER/.cache/pre-commit
+        /home/$MAMBA_USER/.cache/pre-commit \
+    # Additionally, make sure these directories are writable by everyone
+    && chmod a+rwx \
+        /home/$MAMBA_USER/.cache \
+        /home/$MAMBA_USER/.cache/pre-commit \
+;
 
 # Set CMD script to run on container startup.
 COPY _dev-init.sh /usr/local/bin/_dev-init.sh
