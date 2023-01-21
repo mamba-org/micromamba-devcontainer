@@ -2,10 +2,15 @@ name: Update the cookiecutter template
 
 on:
   workflow_dispatch:
-  registry_package:
+  workflow_run:
+    workflows:
+      - Build and publish Docker image
+    types:
+      - completed
 
 jobs:
   updaterepos:
+    if: (github.event_name == 'workflow_dispatch') || (github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/github-script@v6
