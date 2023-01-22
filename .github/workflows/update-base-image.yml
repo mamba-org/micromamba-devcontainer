@@ -1,4 +1,4 @@
-name: Generate a PR if a newer image of micromamba-docker is available
+name: Autoupdate micromamba-docker base image
 
 on:
   workflow_dispatch:
@@ -28,3 +28,4 @@ jobs:
         commit-message: "Update to micromamba base image to ${{ steps.update_dockerfile.outputs.new_docker_tag }}"
         title: "Update to micromamba base image to ${{ steps.update_dockerfile.outputs.new_docker_tag }}"
         delete-branch: true
+        reviewers: maresb
