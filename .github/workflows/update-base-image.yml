@@ -1,0 +1,30 @@
+name: Generate a PR if a newer image of micromamba-docker is available
+
+on:
+  workflow_dispatch:
+  # Run every day at 12:18 (https://crontab.guru/every-6-hours)
+  schedule:
+  - cron: '18 12 * * *'
+
+jobs:
+  generate_pr_if_new_micromamba_docker:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@5c3ccc22eb2c950a0fa5bc7c47190d8e3f7e681a
+    - name: Set up Python
+      uses: actions/setup-python@47c4a7af1d72897a511c975c95a5335bb6329dec
+      with:
+        python-version: "3.11"
+    - name: Update Dockerfile base image to latest version
+      id: update_dockerfile
+      run: |
+        python -m pip install --quiet --disable-pip-version-check -r scripts/update_base_image_reqs.txt
+        python scripts/update_base_image.py
+    - name: Create PR
+      uses: peter-evans/create-pull-request@ee93d78b55ada32aa74b5e9957aac9c2523dd22c
+      with:
+        branch: "update-base-image"
+        commit-message: "Update to micromamba base image to ${{ steps.update_dockerfile.outputs.new_docker_tag }}"
+        title: "Update to micromamba base image to ${{ steps.update_dockerfile.outputs.new_docker_tag }}"
+        delete-branch: true
