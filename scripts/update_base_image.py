@@ -1,13 +1,17 @@
-from pathlib import Path
-from requests import get
 import os
+from pathlib import Path
+
+from requests import get
 
 DOCKERFILE_PATH = Path() / "docker" / "Dockerfile"
 BASE_IMAGE_PREFIX = "ARG BASE_IMAGE=mambaorg/micromamba"
 REGISTRY_QUERY_URL = (
     "https://hub.docker.com/v2/repositories/mambaorg/micromamba/tags?page_size=200"
 )
-GITHUB_OUTPUT = os.environ.get("GITHUB_OUTPUT", None)
+GITHUB_OUTPUT = (
+    Path(os.environ["GITHUB_OUTPUT"]) if "GITHUB_OUTPUT" in os.environ else None
+)
+
 
 def main():
     if not DOCKERFILE_PATH.exists():
@@ -16,6 +20,8 @@ def main():
     lines = DOCKERFILE_PATH.read_text().splitlines()
 
     rest = None
+    line_number = -1  # Initial value for type-checking (The for loop always runs.)
+    line = ""  # Initial value for type-checking
     for line_number, line in enumerate(lines):
         if line.startswith(f"{BASE_IMAGE_PREFIX}:git-"):
             rest = line[len(f"{BASE_IMAGE_PREFIX}:git-") :]
@@ -54,7 +60,7 @@ def main():
     if new_git_tag is None:
         raise ValueError("Could not find matching image on DockerHub")
     assert new_digest is not None
-    
+
     if new_git_tag == git_tag:
         print("No new image found")
         if new_digest != digest:
@@ -68,12 +74,14 @@ def main():
         return
     new_docker_tag = f"git-{new_git_tag}-{distro}"
     if GITHUB_OUTPUT is not None:
-        print(f"{new_docker_tag=}", file=GITHUB_OUTPUT)
+        with GITHUB_OUTPUT.open("w") as fh:
+            print(f"{new_docker_tag=}", file=fh)
     replacement_line = f"{BASE_IMAGE_PREFIX}:{new_docker_tag}@{new_digest}"
     print(f"Updating line {line_number}...\nOld: {line}\nNew: {replacement_line}")
     lines[line_number] = replacement_line
     DOCKERFILE_PATH.write_text("\n".join(lines) + "\n")
     print("Update successful.")
+
 
 if __name__ == "__main__":
     main()
