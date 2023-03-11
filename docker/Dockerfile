@@ -31,75 +31,32 @@ RUN rm \
 
 # Install some useful OS packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \
-    # certs for https
-    ca-certificates \
-    #
-    # manpages
-    man-db \
-    #
     # reinstall coreutils to get manpages for the standard commands (e.g. cp)
     coreutils \
     #
     # more helpful utils like sponge
     moreutils \
-    # runs commands as superuser
-    sudo \
     #
     # tab autocompletion for bash
     bash-completion \
-    #
-    # pagination
-    less \
     #
     # monitor output of repeated command
     watch \
     #
     # version control
-    git \
     patch \
     #
     # Git Large File Storage
     git-lfs \
     #
-    # simple text editor
-    nano \
-    #
-    # less-simple text editor
-    vim \
-    #
-    # parses JSON on the bash command line
-    jq \
-    #
-    # GNU Privacy Guard
-    gnupg2 \
-    #
-    # ssh
-    openssh-client \
-    #
     # determines file types
     file \
     #
-    # process monitor
-    htop \
-    #
     # compression
-    zip \
-    unzip \
     p7zip-full \
-    #
-    # downloads files
-    curl \
-    wget \
-    #
-    # lists open files
-    lsof \
     #
     # ping and ip utilities
     iputils-ping \
-    iproute2 \
-    #
-    # ifconfig, netstat, etc.
-    net-tools \
     #
     # nslookup and dig (for looking up hostnames)
     dnsutils \
@@ -109,12 +66,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     #
     # TCP terminal
     telnet \
-    #
-    # used by VS Code LiveShare extension
-    libicu[0-9][0-9] \
-    # # <https://docs.microsoft.com/en-us/visualstudio/liveshare/reference/linux#debian--ubuntu>
-    # libssl1.1  # Not found, only libssl3
-    # libkrb5-3 zlib1g gnome-keyring libsecret-1-0 desktop-file-utils x11-utils \
     #
     && rm -rf /var/lib/apt/lists/*
 
