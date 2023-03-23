@@ -1,0 +1,12 @@
+diff --git a/docker/vendored/library-scripts/common-debian.sh b/docker/vendored/library-scripts/common-debian.sh
+index efdca35..251ee4f 100755
+--- a/docker/vendored/library-scripts/common-debian.sh
++++ b/docker/vendored/library-scripts/common-debian.sh
+@@ -94,7 +94,6 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
+         vim-tiny \
+         less \
+         jq \
+-        lsb-release \
+         apt-transport-https \
+         dialog \
+         libc6 \
