@@ -15,10 +15,6 @@ FROM ${BASE_IMAGE}
 # Grab gosu for switching users.
 COPY --from=tianon/gosu /usr/local/bin/gosu /usr/local/bin/gosu
 
-# Grab Docker and buildx
-COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/docker
-COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-buildx
-
 USER root
 
 ENV USERNAME=mambauser
@@ -62,24 +58,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     #
     && rm -rf /var/lib/apt/lists/*
 
-
-# Install docker-compose
-RUN : \
-    && COMPOSE_VERSION=$(git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1) \
-    && sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose" \
-    && chmod +x /usr/local/bin/docker-compose \
-    && COMPOSE_SWITCH_VERSION=$(git ls-remote https://github.com/docker/compose-switch | grep refs/tags | grep -oE "v[0-9]+\.[0-9]+\.[0-9]+$" | sort --version-sort | tail -n 1) \
-    && sh -c "curl -L https://github.com/docker/compose/releases/download/${COMPOSE_SWITCH_VERSION}/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/compose-switch" \
-    && chmod +x /usr/local/bin/compose-switch \
-    ;
-
-# Install bash completions
-RUN : \
-    && mkdir -p /etc/bash_completion.d \
-    && sh -c "curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose" \
-    && sh -c "curl -L https://raw.githubusercontent.com/docker/cli/v20.10.13/contrib/completion/bash/docker > /etc/bash_completion.d/docker" \
-    && sh -c "curl -L https://raw.githubusercontent.com/git/git/v2.35.1/contrib/completion/git-completion.bash > /etc/bash_completion.d/git" \
-    ;
+COPY vendored/features/docker-in-docker/install.sh /tmp/install.sh
+RUN DOCKERDASHCOMPOSEVERSION=v2 bash /tmp/install.sh && rm /tmp/install.sh
 
 # Make sure everyone can access the working directory.
 ARG DEV_WORK_DIR
