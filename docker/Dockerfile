@@ -21,19 +21,14 @@ COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-bui
 
 USER root
 
-# Reallow installing manpages. (See Ubuntu's "unminimize" script.)
-# (The Ubuntu image is minified so manpages aren't included.)
-RUN rm \
-        /etc/dpkg/dpkg.cfg.d/excludes \
-        /etc/update-motd.d/60-unminimize \
-        /usr/bin/man \
-    && dpkg-divert --quiet --remove --rename /usr/bin/man
+COPY vendored/library-scripts/common-debian-patched.sh /tmp/
+
+ENV USERNAME=mambauser
+RUN bash /tmp/common-debian-patched.sh && rm /tmp/common-debian-patched.sh
+
 
 # Install some useful OS packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \
-    # reinstall coreutils to get manpages for the standard commands (e.g. cp)
-    coreutils \
-    #
     # more helpful utils like sponge
     moreutils \
     #
@@ -69,26 +64,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     #
     && rm -rf /var/lib/apt/lists/*
 
-# Old SSL library is needed for Live Share
-# <https://github.com/MicrosoftDocs/live-share/issues/3297#issuecomment-1206805848>
-RUN : \
-  && ( \
-    wget "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.16_$(dpkg --print-architecture).deb" \
-    || wget "http://ports.ubuntu.com/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_$(dpkg --print-architecture).deb" \
-  ) \
-  && sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2*_$(dpkg --print-architecture).deb \
-  && rm libssl1.1_1.1.1f-1ubuntu2*_$(dpkg --print-architecture).deb \
-;
-
-# This installs Live Share dependencies, but doubles the size of the image.
-# Most of the dependencies it installs look unnecessary.
-# RUN curl -L  https://aka.ms/vsls-linux-prereq-script | sudo bash
-
-RUN : \
-    # Grant sudo to the user.
-    && usermod -aG sudo "${MAMBA_USER}" \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/grant-to-sudo-group \
-    ;
 
 # Install docker-compose
 RUN : \
