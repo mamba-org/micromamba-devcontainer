@@ -21,11 +21,9 @@ COPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-bui
 
 USER root
 
-COPY vendored/library-scripts/common-debian-patched.sh /tmp/
-
 ENV USERNAME=mambauser
+COPY vendored/library-scripts/common-debian-patched.sh /tmp/
 RUN bash /tmp/common-debian-patched.sh && rm /tmp/common-debian-patched.sh
-
 
 # Install some useful OS packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \
