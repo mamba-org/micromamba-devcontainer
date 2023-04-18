@@ -56,6 +56,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     # TCP terminal
     telnet \
     #
+    # Automatically resolve .rej files from failed patches
+    wiggle \
     && rm -rf /var/lib/apt/lists/*
 
 COPY vendored/features/docker-in-docker/install.sh /tmp/install.sh
