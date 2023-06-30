@@ -5,7 +5,7 @@
 # For more info, about micromamba, see:
 # <https://github.com/mamba-org/micromamba-docker>.
 
-ARG BASE_IMAGE=mambaorg/micromamba:git-4073267-jammy@sha256:77dd2668aecff2383270a72fc0827c68aabe1cad3f01f3a3f5977665bb5bed70
+ARG BASE_IMAGE=mambaorg/micromamba:git-ee538d0-jammy@sha256:116aca65690cc027e3220c02fd7163b0e744505eee337b415de95d4ccc434aa5
 
 # The folder to use as a workspace. The project should be mounted here.
 ARG DEV_WORK_DIR=/workspaces
