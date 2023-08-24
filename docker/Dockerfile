@@ -19,7 +19,7 @@ USER root
 
 ENV USERNAME=mambauser
 COPY vendored/library-scripts/common-debian-patched.sh /tmp/
-RUN bash /tmp/common-debian-patched.sh && rm /tmp/common-debian-patched.sh
+RUN bash /tmp/common-debian-patched.sh true mambauser && rm /tmp/common-debian-patched.sh
 
 # Install some useful OS packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \
