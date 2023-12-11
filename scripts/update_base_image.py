@@ -95,7 +95,7 @@ def update_workflow_file(new_base_images: list[str]) -> None:
         file.writelines(lines)
 
 
-def parse_dockerfile() -> DockerImageTag:
+def parse_dockerfile() -> tuple[DockerImageTag, int, list[str]]:
     if not DOCKERFILE_PATH.exists():
         raise ValueError("Dockerfile not found")
 
