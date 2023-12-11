@@ -10,6 +10,12 @@ Featuring:
 * Runs [remotely](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) (e.g. from the cloud) just as well as locally. ☁️
 * Several common tools (including Docker) are pre-installed with convenient defaults to minimize necessary configuration. 🐳
 
+## Alternative
+
+This project is meant to provide a comprehensive Micromamba base image for development.
+
+If instead you'd prefer a minimalistic approach for adding Micromamba to an existing dev container, see the [Micromamba dev container feature](https://github.com/mamba-org/devcontainer-features/tree/main/src/micromamba).
+
 ## Links
 
 * [This micromamba-devcontainer on GitHub](https://github.com/mamba-org/micromamba-devcontainer)
