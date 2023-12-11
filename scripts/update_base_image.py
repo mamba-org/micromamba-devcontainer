@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
 from typing import NamedTuple
 import functools
+
 from requests import get
 
 DOCKERFILE_PATH = Path() / "docker" / "Dockerfile"
@@ -25,7 +28,7 @@ class DockerImageTag(NamedTuple):
         return f"{self.repository}:git-{self.git_tag}-{self.distro}@{self.digest}"
 
     @staticmethod
-    def parse(s: str):
+    def parse(s: str) -> DockerImageTag:
         repository, tag_digest = s.split(":", 1)
         tag, digest = tag_digest.split("@", 1)
 
@@ -40,7 +43,7 @@ class DockerImageTag(NamedTuple):
         return DockerImageTag(repository, git_tag, distro, digest)
 
 
-def get_existing_base_images():
+def get_existing_base_images() -> list[DockerImageTag]:
     if not WORKFLOW_PATH.exists():
         raise ValueError("Workflow file not found")
 
@@ -60,7 +63,7 @@ def get_existing_base_images():
     return [DockerImageTag.parse(image) for image in existing_base_images]
 
 
-def update_workflow_file(new_base_images):
+def update_workflow_file(new_base_images: list[str]) -> None:
     if not WORKFLOW_PATH.exists():
         raise ValueError("Workflow file not found")
 
@@ -92,7 +95,7 @@ def update_workflow_file(new_base_images):
         file.writelines(lines)
 
 
-def parse_dockerfile():
+def parse_dockerfile() -> DockerImageTag:
     if not DOCKERFILE_PATH.exists():
         raise ValueError("Dockerfile not found")
 
@@ -106,7 +109,7 @@ def parse_dockerfile():
 
 
 @functools.cache
-def get_registry_results():
+def get_registry_results() -> list[dict]:
     response = get(REGISTRY_QUERY_URL)
     response.raise_for_status()
     return response.json()["results"]
@@ -134,7 +137,7 @@ def fetch_new_image_info(
     return image_tag
 
 
-def update_dockerfile(lines, line_number, image_tag):
+def update_dockerfile(lines: list[str], line_number: int, image_tag: DockerImageTag) -> str:
     new_docker_tag = f"git-{image_tag.git_tag}-{image_tag.distro}"
     replacement_line = f"{BASE_IMAGE_PREFIX}:{new_docker_tag}@{image_tag.digest}"
     lines[line_number] = replacement_line
