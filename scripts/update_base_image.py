@@ -56,7 +56,7 @@ def get_existing_base_images() -> list[DockerImageTag]:
         if "base-image:" in line:
             matrix_start = i + 1
         elif matrix_start is not None and line.strip().startswith("-"):
-            image = line.strip()[2:].strip()
+            image = line.strip()[1:].strip()
             existing_base_images.append(image)
         elif matrix_start is not None and not line.strip().startswith("-"):
             break
@@ -88,7 +88,7 @@ def update_workflow_file(new_base_images: list[str]) -> None:
         matrix_end = i
 
     indentation_size = len(lines[matrix_end]) - len(lines[matrix_end].lstrip())
-    indentation_str = indentation * " "
+    indentation_str = indentation_size * " "
 
     # Replace the matrix entries with new base images
     matrix_lines = [indentation_str + f"- {image}\n" for image in new_base_images]
