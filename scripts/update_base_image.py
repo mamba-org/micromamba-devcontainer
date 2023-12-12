@@ -87,8 +87,11 @@ def update_workflow_file(new_base_images: list[str]) -> None:
             break
         matrix_end = i
 
+    indentation_size = len(lines[matrix_end]) - len(lines[matrix_end].lstrip())
+    indentation_str = indentation * " "
+
     # Replace the matrix entries with new base images
-    matrix_lines = [f"          - {image}\n" for image in new_base_images]
+    matrix_lines = [indentation_str + f"- {image}\n" for image in new_base_images]
     lines[matrix_start : matrix_end + 1] = matrix_lines
 
     with WORKFLOW_PATH.open("w") as file:
