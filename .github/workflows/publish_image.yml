@@ -20,6 +20,7 @@ jobs:
         base-image:
           - mambaorg/micromamba:git-c160e88-jammy@sha256:e3a59f560211ded26e65afafafd20eafc31bad2745db9a2932e39574847a7159
           - mambaorg/micromamba:git-c160e88-jammy-cuda-11.8.0@sha256:804aef13a790647f5145b0e6673f7069c4591e7871d25381ffcd778bf1fe0d4b
+          - mamba-org/micromamba:git-596b6ef-focal-cuda-11.2.2@sha256:74b784b017bfe6c6e8a63d797f79a06a7a4a11c7f79bf11f1fca5e5417ed52cc
     # Set permissions for GitHub token
     # <https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#authenticating-to-package-registries-on-github>
     permissions:
