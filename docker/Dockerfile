@@ -18,8 +18,8 @@ COPY --from=tianon/gosu /usr/local/bin/gosu /usr/local/bin/gosu
 USER root
 
 ENV USERNAME=mambauser
-COPY vendored/library-scripts/common-debian-patched.sh /tmp/
-RUN bash /tmp/common-debian-patched.sh true mambauser && rm /tmp/common-debian-patched.sh
+COPY vendored/features/src/common-utils/main-patched.sh /tmp/
+RUN bash /tmp/main-patched.sh true mambauser && rm /tmp/main-patched.sh
 
 # Install some useful OS packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends --reinstall \

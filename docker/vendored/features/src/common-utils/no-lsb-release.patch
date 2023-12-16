@@ -1,0 +1,12 @@
+diff --git a/docker/vendored/features/src/common-utils/main.sh b/docker/vendored/features/src/common-utils/main.sh
+index 26f0a75..33c302f 100755
+--- a/docker/vendored/features/src/common-utils/main.sh
++++ b/docker/vendored/features/src/common-utils/main.sh
+@@ -53,7 +53,6 @@ install_debian_packages() {
+         vim-tiny \
+         less \
+         jq \
+-        lsb-release \
+         apt-transport-https \
+         dialog \
+         libc6 \
