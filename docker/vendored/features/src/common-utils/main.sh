@@ -53,6 +53,7 @@ install_debian_packages() {
         vim-tiny \
         less \
         jq \
+        lsb-release \
         apt-transport-https \
         dialog \
         libc6 \
