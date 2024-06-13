@@ -19,6 +19,7 @@ USER root
 
 ENV USERNAME=mambauser
 COPY vendored/features/src/common-utils/main-patched.sh /tmp/
+COPY vendored/features/src/common-utils/scripts/ /tmp/scripts/
 RUN bash /tmp/main-patched.sh true mambauser && rm /tmp/main-patched.sh
 
 # Install some useful OS packages
