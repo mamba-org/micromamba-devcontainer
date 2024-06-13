@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import NamedTuple
@@ -8,7 +9,7 @@ import functools
 from requests import get
 
 DOCKERFILE_PATH = Path() / "docker" / "Dockerfile"
-WORKFLOW_PATH = Path() / ".github" / "workflows" / "publish_image.yml"
+BASE_IMAGES_JSON = Path() / "base-images.json"
 BASE_IMAGE_PREFIX = "ARG BASE_IMAGE=mambaorg/micromamba"
 REGISTRY_QUERY_URL = (
     "https://hub.docker.com/v2/repositories/mambaorg/micromamba/tags?page_size=200"
@@ -19,12 +20,23 @@ GITHUB_OUTPUT = (
 
 
 class DockerImageTag(NamedTuple):
+    """Represents a Docker image tag in the following format:
+
+    DockerImageTag(
+        repository='mambaorg/micromamba',
+        git_tag='c160e88',
+        distro='jammy',
+        digest='sha256:e3a59f560211ded26e65afafafd20eafc31bad2745db9a2932e39574847a7159'
+    )
+    """
+
     repository: str
     git_tag: str
     distro: str
     digest: str
 
     def to_str(self) -> str:
+        """mambaorg/micromamba:git-515d637-jammy@sha256:f53e550..."""
         return f"{self.repository}:git-{self.git_tag}-{self.distro}@{self.digest}"
 
     @staticmethod
@@ -43,59 +55,17 @@ class DockerImageTag(NamedTuple):
         return DockerImageTag(repository, git_tag, distro, digest)
 
 
-def get_existing_base_images() -> list[DockerImageTag]:
-    if not WORKFLOW_PATH.exists():
-        raise ValueError("Workflow file not found")
-
-    with WORKFLOW_PATH.open("r") as file:
-        lines = file.readlines()
-
-    existing_base_images = []
-    matrix_start = None
-    for i, line in enumerate(lines):
-        if "base-image:" in line:
-            matrix_start = i + 1
-        elif matrix_start is not None and line.strip().startswith("-"):
-            image = line.strip()[1:].strip()
-            existing_base_images.append(image)
-        elif matrix_start is not None and not line.strip().startswith("-"):
-            break
-    return [DockerImageTag.parse(image) for image in existing_base_images]
+def get_existing_base_images() -> dict[str, DockerImageTag]:
+    if not BASE_IMAGES_JSON.exists():
+        raise ValueError("Base images file not found")
+    raw_data = json.loads(BASE_IMAGES_JSON.read_text())
+    return {key: DockerImageTag.parse(value) for key, value in raw_data.items()}
 
 
-def update_workflow_file(new_base_images: list[str]) -> None:
-    if not WORKFLOW_PATH.exists():
-        raise ValueError("Workflow file not found")
-
-    with WORKFLOW_PATH.open("r") as file:
-        lines = file.readlines()
-
-    # Find the start of the matrix section
-    matrix_start = None
-    for i, line in enumerate(lines):
-        if "base-image:" in line:
-            matrix_start = i + 1
-            break
-
-    if matrix_start is None:
-        raise ValueError("Matrix not found in the workflow file")
-
-    # Find the end of the matrix section
-    matrix_end = matrix_start
-    for i in range(matrix_start, len(lines)):
-        if not lines[i].strip().startswith("-"):
-            break
-        matrix_end = i
-
-    indentation_size = len(lines[matrix_end]) - len(lines[matrix_end].lstrip())
-    indentation_str = indentation_size * " "
-
-    # Replace the matrix entries with new base images
-    matrix_lines = [indentation_str + f"- {image}\n" for image in new_base_images]
-    lines[matrix_start : matrix_end + 1] = matrix_lines
-
-    with WORKFLOW_PATH.open("w") as file:
-        file.writelines(lines)
+def update_base_images_json(new_base_images: dict[str, str]) -> None:
+    if not BASE_IMAGES_JSON.exists():
+        raise ValueError("Base images file not found")
+    BASE_IMAGES_JSON.write_text(json.dumps(new_base_images, indent=4) + "\n")
 
 
 def parse_dockerfile() -> tuple[DockerImageTag, int, list[str]]:
@@ -113,6 +83,7 @@ def parse_dockerfile() -> tuple[DockerImageTag, int, list[str]]:
 
 @functools.cache
 def get_registry_results() -> list[dict]:
+    """Image metadata from the registry."""
     response = get(REGISTRY_QUERY_URL)
     response.raise_for_status()
     return response.json()["results"]
@@ -122,6 +93,7 @@ def fetch_new_image_info(
     image_tag: DockerImageTag,
     starts_with="git-",
 ) -> DockerImageTag:
+    """Return the first result from the registry that ends with the distro name."""
     results = get_registry_results()
 
     for result in results:
@@ -140,7 +112,9 @@ def fetch_new_image_info(
     return image_tag
 
 
-def update_dockerfile(lines: list[str], line_number: int, image_tag: DockerImageTag) -> str:
+def update_dockerfile(
+    lines: list[str], line_number: int, image_tag: DockerImageTag
+) -> str:
     new_docker_tag = f"git-{image_tag.git_tag}-{image_tag.distro}"
     replacement_line = f"{BASE_IMAGE_PREFIX}:{new_docker_tag}@{image_tag.digest}"
     lines[line_number] = replacement_line
@@ -170,10 +144,11 @@ def main():
 
     print("Updating workflow file...")
     existing_base_images = get_existing_base_images()
-    updated_base_images = [
-        fetch_new_image_info(image).to_str() for image in existing_base_images
-    ]
-    update_workflow_file(updated_base_images)
+    updated_base_images = {
+        name: fetch_new_image_info(image).to_str()
+        for name, image in existing_base_images.items()
+    }
+    update_base_images_json(updated_base_images)
     print("✅ Workflow file updated successfully.")
 
 
