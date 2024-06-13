@@ -40,7 +40,7 @@ jobs:
     - name: Extract base image tag from base-images.json
       id: extract_base_image
       run: |
-        BASE_IMAGE=$(jq -r ".\"${{ matrix.base-image-name }}\"" docker/base-images.json)
+        BASE_IMAGE=$(jq -r ".\"${{ matrix.base-image-name }}\"" base-images.json)
         echo "BASE_IMAGE=$BASE_IMAGE" >> $GITHUB_ENV
 
     - name: Print the base image
