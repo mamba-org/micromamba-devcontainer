@@ -14,9 +14,7 @@ BASE_IMAGE_PREFIX = "ARG BASE_IMAGE=mambaorg/micromamba"
 REGISTRY_QUERY_URL = (
     "https://hub.docker.com/v2/repositories/mambaorg/micromamba/tags?page_size=200"
 )
-GITHUB_OUTPUT = (
-    Path(os.environ["GITHUB_OUTPUT"]) if "GITHUB_OUTPUT" in os.environ else None
-)
+GITHUB_ENV = Path(os.environ["GITHUB_ENV"]) if "GITHUB_ENV" in os.environ else None
 
 
 class DockerImageTag(NamedTuple):
@@ -135,11 +133,10 @@ def main():
     if updated_image_tag == current_image_tag:
         print("No update needed for Dockerfile.")
     else:
-        new_docker_tag = update_dockerfile(
-            lines,
-            line_number,
-            updated_image_tag,
-        )
+        new_docker_tag = update_dockerfile(lines, line_number, updated_image_tag)
+        if GITHUB_ENV:
+            with open(GITHUB_ENV, "a") as f:
+                f.write(f"NEW_DOCKER_TAG={new_docker_tag}\n")
         print(f"✅ Update successful: {new_docker_tag}")
 
     print("Updating workflow file...")
