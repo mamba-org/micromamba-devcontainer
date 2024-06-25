@@ -1,5 +1,5 @@
 {
-    "jammy": "mambaorg/micromamba:git-515d637-jammy@sha256:f53e550d2166119da3c34a85fd2d1551e33d5c2a333932b743ee6039aeee93bf",
+    "jammy": "mambaorg/micromamba:git-5637ca7-jammy@sha256:510d6146262f5fbeca2afe1944bc361b69deb323abfd242552b7af2f9abb40cc",
     "jammy-cuda": "mambaorg/micromamba:git-515d637-jammy-cuda-11.8.0@sha256:0ddc58f01a09792a823be19142379f814b89a7a696aba409e78979b53fcecf47",
     "focal-cuda": "mambaorg/micromamba:git-515d637-focal-cuda-11.2.2@sha256:4262ac7c3e27ad6640021ee9e78c647cdd8fdfcbb25914c8e7f37bdc66c932d9"
 }
